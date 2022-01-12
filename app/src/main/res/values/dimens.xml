@@ -1,0 +1,17 @@
+<resources>
+    <dimen name="dialog_border_radius">4dp</dimen>
+
+    <dimen name="button_outside_border">2dp</dimen>
+    <dimen name="button_inside_border">1dp</dimen>
+
+    <dimen name="button_large_text">40dp</dimen>
+    <dimen name="button_medium_text">36dp</dimen>
+    <dimen name="button_small_text">26dp</dimen>
+
+    <dimen name="button_large_text_padding">27dp</dimen>
+    <dimen name="button_medium_text_padding">17dp</dimen>
+    <dimen name="button_small_text_padding">12dp</dimen>
+
+    <dimen name="item_radius">10dp</dimen>
+</resources>
+

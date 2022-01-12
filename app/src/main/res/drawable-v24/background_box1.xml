@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/dialog_border_radius" />
+            <solid android:color="@color/colorBoxOutline1" />
+        </shape>
+    </item>
+    <item
+        android:bottom="@dimen/button_outside_border"
+        android:left="@dimen/button_outside_border"
+        android:right="@dimen/button_outside_border"
+        android:top="@dimen/button_outside_border">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/dialog_border_radius" />
+            <solid android:color="@color/colorBackground1" />
+        </shape>
+    </item>
+</layer-list>
