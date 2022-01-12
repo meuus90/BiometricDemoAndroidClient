@@ -259,6 +259,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
 
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'androidx.biometric:biometric:1.1.0'
 }
 
 task fullCoverageReport(type: JacocoReport) {

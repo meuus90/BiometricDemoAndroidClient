@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.annotation.GlideModule
+import com.demo.biometric.presentation.view.dialog.LoadingDialog
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -146,6 +147,21 @@ abstract class BaseActivity<T : ViewBinding> : DaggerAppCompatActivity() {
                 it,
                 InputMethodManager.HIDE_NOT_ALWAYS
             )
+        }
+    }
+
+    private var loadingDialog: LoadingDialog? = null
+    internal fun setLoading(show: Boolean) {
+        if (show) {
+            if (loadingDialog?.isShowing() == true)
+                return
+
+            loadingDialog = LoadingDialog.instance()
+            loadingDialog?.show(supportFragmentManager, null)
+
+        } else {
+            if (loadingDialog?.isShowing() == true)
+                loadingDialog?.dismiss()
         }
     }
 }

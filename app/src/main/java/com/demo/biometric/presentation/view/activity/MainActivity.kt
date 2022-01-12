@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import androidx.activity.viewModels
 import com.demo.biometric.databinding.ActivityMainBinding
 import com.demo.biometric.presentation.base.BaseActivity
-import com.demo.biometric.presentation.view.dialog.LoadingDialog
+import com.demo.biometric.presentation.view.fragment.AuthFragment
 import com.demo.biometric.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -19,22 +19,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         frameLayoutId = binding.contentFrame.id
-    }
 
-    var roomKey = ""
-
-    private var loadingDialog: LoadingDialog? = null
-    internal fun setLoading(show: Boolean) {
-        if (show) {
-            if (loadingDialog?.isShowing() == true)
-                return
-
-            loadingDialog = LoadingDialog.instance()
-            loadingDialog?.show(supportFragmentManager, null)
-
-        } else {
-            if (loadingDialog?.isShowing() == true)
-                loadingDialog?.dismiss()
-        }
+        replaceFragment(AuthFragment::class.java)
     }
 }

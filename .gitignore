@@ -102,4 +102,4 @@ fabric.properties
 /app/beta/
 /app/release/
 
-#/keystore.properties
+/keystore.properties
