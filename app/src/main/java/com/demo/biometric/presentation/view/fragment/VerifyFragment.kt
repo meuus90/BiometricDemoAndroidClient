@@ -11,28 +11,28 @@ import com.demo.biometric.base.biometric.BiometricUtil
 import com.demo.biometric.base.biometric.CryptoUtil
 import com.demo.biometric.base.network.Outcome
 import com.demo.biometric.data.Params
-import com.demo.biometric.data.entity.EnrollCode
-import com.demo.biometric.data.entity.VerifyEnrollData
-import com.demo.biometric.databinding.FragmentEnrollBinding
+import com.demo.biometric.data.entity.Challenge
+import com.demo.biometric.databinding.FragmentVerifyBinding
 import com.demo.biometric.presentation.base.BaseFragment
-import com.demo.biometric.presentation.viewmodel.EnrollViewModel
+import com.demo.biometric.presentation.viewmodel.ChallengeViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 
 @ExperimentalCoroutinesApi
-class EnrollFragment : BaseFragment<FragmentEnrollBinding>() {
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentEnrollBinding
-        get() = FragmentEnrollBinding::inflate
+class VerifyFragment : BaseFragment<FragmentVerifyBinding>() {
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentVerifyBinding
+        get() = FragmentVerifyBinding::inflate
 
-    private val viewModel by viewModels<EnrollViewModel> { viewModelFactory }
+    private val viewModel by viewModels<ChallengeViewModel> { viewModelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.tvFingerPrint.setOnClickListener {
             baseActivity.setLoading(true)
-            viewModel.requestEnroll()
+            viewModel.requestChallenge()
         }
 
         lifecycleScope.launchWhenCreated {
@@ -40,7 +40,7 @@ class EnrollFragment : BaseFragment<FragmentEnrollBinding>() {
                 when (it) {
                     is Outcome.Success<*> -> {
                         baseActivity.setLoading(false)
-                        showBiometricPrompt(it.data as EnrollCode)
+                        showBiometricPrompt(it.data as Challenge)
                     }
                     is Outcome.Progress -> {
                         baseActivity.setLoading(true)
@@ -59,7 +59,7 @@ class EnrollFragment : BaseFragment<FragmentEnrollBinding>() {
                     is Outcome.Success<*> -> {
                         baseActivity.setLoading(false)
 
-                        replaceFragment(VerifyFragment::class.java)
+                        replaceFragment(HomeFragment::class.java)
                     }
                     is Outcome.Progress -> {
                         baseActivity.setLoading(true)
@@ -73,16 +73,15 @@ class EnrollFragment : BaseFragment<FragmentEnrollBinding>() {
         }
     }
 
-    fun showBiometricPrompt(enrollCode: EnrollCode) {
+    fun showBiometricPrompt(challenge: Challenge) {
         BiometricUtil.showBiometricPrompt(
             activity = baseActivity,
             listener = object : BiometricUtil.BiometricAuthListener {
                 override fun onBiometricAuthenticationSuccess(result: BiometricPrompt.AuthenticationResult) {
-                    val data = VerifyEnrollData(
-                        CryptoUtil.getPublicKey(),
-                        enrollCode.enrollCode
-                    )
-                    viewModel.verifyEnroll(Params.init(data))
+                    result.cryptoObject?.signature?.let {
+                        val signedData = CryptoUtil.signData(challenge.challenge, it)
+                        viewModel.verifyChallenge(Params.init(signedData))
+                    }
                 }
 
                 override fun onBiometricAuthenticationError(

@@ -12,6 +12,7 @@ import java.security.spec.ECGenParameterSpec
 
 
 object CryptoUtil {
+    private const val ALGORITHM = "SHA256withECDSA"
     private const val ANDROID_KEYSTORE = "AndroidKeyStore"
     private const val DEFAULT_SECRET_KEY_NAME = "Y0UR$3CR3TK3YN@M3"
 
@@ -19,7 +20,7 @@ object CryptoUtil {
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
         keyStore.load(null) // Keystore must be loaded before it can be accessed
 
-        val signature = Signature.getInstance("SHA256withECDSA")
+        val signature = Signature.getInstance(ALGORITHM)
         keyStore.getKey(keyName, null)?.let {
             signature.initSign(it as PrivateKey)
             return signature
@@ -66,12 +67,17 @@ object CryptoUtil {
         keyStore.load(null) // Keystore must be loaded before it can be accessed
 
         val publicKey = keyStore.getCertificate(keyName).publicKey
-        return """----BEGIN PUBLIC KEY----
-${Base64.encodeToString(publicKey.encoded, Base64.DEFAULT)}----END PUBLIC KEY----""".trimIndent()
+        return "-----BEGIN PUBLIC KEY-----\n${
+            Base64.encodeToString(
+                publicKey.encoded,
+                Base64.DEFAULT
+            )
+        }-----END PUBLIC KEY-----"
     }
 
-    fun signData(plaintext: String, signature: Signature): ByteArray {
+    fun signData(plaintext: String, signature: Signature): String {
         signature.update(plaintext.encodeToByteArray())
-        return signature.sign()
+
+        return Base64.encodeToString(signature.sign(), Base64.NO_WRAP or Base64.URL_SAFE)
     }
 }
