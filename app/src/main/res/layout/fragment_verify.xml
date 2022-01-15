@@ -16,7 +16,7 @@
         android:drawableStart="@drawable/ic_fingerprint"
         android:drawablePadding="10dp"
         android:padding="10dp"
-        android:text="@string/finger_print"
+        android:text="@string/verify_finger_print"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
