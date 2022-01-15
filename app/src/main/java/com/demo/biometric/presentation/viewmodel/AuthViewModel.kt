@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.demo.biometric.base.di.annotation.ViewModelKey
 import com.demo.biometric.data.Params
-import com.demo.biometric.usecase.SignInUseCase
+import com.demo.biometric.usecase.RequestEnrollUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -15,7 +15,7 @@ import javax.inject.Inject
 //@Singleton
 class AuthViewModel
 @Inject
-constructor(private val signInUseCase: SignInUseCase) : ViewModel() {
+constructor(private val signInUseCase: RequestEnrollUseCase) : ViewModel() {
 
     @ExperimentalCoroutinesApi
     val signInResult = signInUseCase.resultFlow

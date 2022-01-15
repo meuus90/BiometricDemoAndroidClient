@@ -1,4 +1,4 @@
-package com.demo.biometric.usecase.base
+package com.demo.biometric.usecase
 
 import com.demo.biometric.data.Params
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,47 +1,58 @@
 package com.demo.biometric.base.biometric
 
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Base64
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.PrivateKey
 import java.security.Signature
+import java.security.spec.ECGenParameterSpec
 
 
 object CryptoUtil {
     private const val ANDROID_KEYSTORE = "AndroidKeyStore"
     private const val DEFAULT_SECRET_KEY_NAME = "Y0UR$3CR3TK3YN@M3"
-    private const val KEY_SIZE = 128
-    private const val ENCRYPTION_BLOCK_MODE = KeyProperties.BLOCK_MODE_GCM
-    private const val ENCRYPTION_PADDING = KeyProperties.ENCRYPTION_PADDING_NONE
-    private const val ENCRYPTION_ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
 
     fun getOrCreateSignature(keyName: String = DEFAULT_SECRET_KEY_NAME): Signature {
-        // 1
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
         keyStore.load(null) // Keystore must be loaded before it can be accessed
 
-        val signature = Signature.getInstance("signing_algorithm")
+        val signature = Signature.getInstance("SHA256withECDSA")
         keyStore.getKey(keyName, null)?.let {
             signature.initSign(it as PrivateKey)
             return signature
         }
 
-        // 2
-        val paramsBuilder = KeyGenParameterSpec.Builder(
-            keyName,
-            KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
-        )
+        val paramsBuilder = KeyGenParameterSpec.Builder(keyName, KeyProperties.PURPOSE_SIGN)
         paramsBuilder.apply {
-            setBlockModes(ENCRYPTION_BLOCK_MODE)
-            setEncryptionPaddings(ENCRYPTION_PADDING)
-            setKeySize(KEY_SIZE)
-            setUserAuthenticationRequired(true) // for use biometric auth
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                    setDigests(KeyProperties.DIGEST_SHA256)
+                    setUserAuthenticationRequired(true)
+                    setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+                    setInvalidatedByBiometricEnrollment(true)
+                    setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q -> {
+                    setDigests(KeyProperties.DIGEST_SHA256)
+                    setUserAuthenticationRequired(true)
+                    setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+                    setInvalidatedByBiometricEnrollment(true)
+                    setUserAuthenticationValidityDurationSeconds(-1)
+                }
+                else -> {
+                    setDigests(KeyProperties.DIGEST_SHA256)
+                    setUserAuthenticationRequired(true)
+                    setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+                    setUserAuthenticationValidityDurationSeconds(-1)
+                }
+            }
         }
 
-        // 3
         val generator =
-            KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEYSTORE)
+            KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE)
         generator.initialize(paramsBuilder.build())
 
         val keyPair = generator.generateKeyPair()
@@ -53,15 +64,14 @@ object CryptoUtil {
     fun getPublicKey(keyName: String = DEFAULT_SECRET_KEY_NAME): String {
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
         keyStore.load(null) // Keystore must be loaded before it can be accessed
-        return keyStore.getCertificate(keyName).publicKey.toString()
+
+        val publicKey = keyStore.getCertificate(keyName).publicKey
+        return """----BEGIN PUBLIC KEY----
+${Base64.encodeToString(publicKey.encoded, Base64.DEFAULT)}----END PUBLIC KEY----""".trimIndent()
     }
 
     fun signData(plaintext: String, signature: Signature): ByteArray {
         signature.update(plaintext.encodeToByteArray())
         return signature.sign()
-    }
-
-    fun verifySignedData() {
-        
     }
 }

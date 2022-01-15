@@ -97,17 +97,8 @@ android {
             manifestPlaceholders = [appNameGradle: "@string/app_name"]
             manifestPlaceholders = [appLabel: "@string/app_name"]
 
-            buildConfigField "String", "gcpClientID", "\"1055266818819-43oa7fdmbhaov1s3joaod0knl0eaf4t4.apps.googleusercontent.com\""
+            buildConfigField "String", "restApiServer", "\"http://192.168.0.4:3000/api/\""
         }
-
-//        dev {
-//            dimension "default"
-////            applicationIdSuffix = ".dev"
-//            manifestPlaceholders = [appNameGradle: "@string/app_name"]
-//            manifestPlaceholders = [appLabel: "@string/app_name"]
-//
-//            buildConfigField "String", "gcpClientID", "\"1055266818819-43oa7fdmbhaov1s3joaod0knl0eaf4t4.apps.googleusercontent.com\""
-//        }
     }
 
     sourceSets {
@@ -257,6 +248,15 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation "com.orhanobut:logger:$logger_version"
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.biometric:biometric:1.1.0'

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import androidx.activity.viewModels
 import com.demo.biometric.databinding.ActivityMainBinding
 import com.demo.biometric.presentation.base.BaseActivity
-import com.demo.biometric.presentation.view.fragment.AuthFragment
+import com.demo.biometric.presentation.view.fragment.EnrollFragment
 import com.demo.biometric.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -20,6 +20,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
         frameLayoutId = binding.contentFrame.id
 
-        replaceFragment(AuthFragment::class.java)
+        replaceFragment(EnrollFragment::class.java)
     }
 }

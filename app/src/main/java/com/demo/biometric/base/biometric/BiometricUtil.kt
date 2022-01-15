@@ -22,7 +22,8 @@ object BiometricUtil {
             .setTitle(title)
             .setSubtitle(subtitle)
             .setDescription(description)
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+            .setNegativeButtonText("cancel")
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
 
         return builder.build()
     }
@@ -31,10 +32,8 @@ object BiometricUtil {
         activity: AppCompatActivity,
         listener: BiometricAuthListener
     ): BiometricPrompt {
-        // 1
         val executor = ContextCompat.getMainExecutor(activity)
 
-        // 2
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
@@ -52,7 +51,6 @@ object BiometricUtil {
             }
         }
 
-        // 3
         return BiometricPrompt(activity, executor, callback)
     }
 
@@ -63,13 +61,10 @@ object BiometricUtil {
         activity: AppCompatActivity,
         listener: BiometricAuthListener
     ) {
-        // 1
         val promptInfo = setBiometricPromptInfo(title, subtitle, description)
 
-        // 2
         val biometricPrompt = initBiometricPrompt(activity, listener)
 
-        // 3
         biometricPrompt.authenticate(
             promptInfo, BiometricPrompt.CryptoObject(
                 CryptoUtil.getOrCreateSignature()

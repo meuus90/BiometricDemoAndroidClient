@@ -1,8 +1,8 @@
 package com.demo.biometric.data
 
-data class Params(val extra: List<Any>) {
+data class Params(val extra: MutableList<Any>) {
     companion object {
-        fun init(vararg extra: Any) = Params(extra.toList())
-        fun initEmpty() = Params(listOf())
+        fun init(vararg extra: Any) = Params(extra.toMutableList())
+        fun initEmpty() = Params(mutableListOf())
     }
 }

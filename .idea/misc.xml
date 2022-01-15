@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4015625" />
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.4015625" />
         <entry key="app/src/main/res/layout/fragment_auth.xml" value="0.4015625" />
+        <entry key="app/src/main/res/layout/fragment_enroll.xml" value="0.5" />
       </map>
     </option>
   </component>
