@@ -75,6 +75,7 @@ class EnrollFragment : BaseFragment<FragmentEnrollBinding>() {
 
     fun showBiometricPrompt(enrollCode: EnrollCode) {
         BiometricUtil.showBiometricPrompt(
+            title = "바이오 인증 등록",
             activity = baseActivity,
             listener = object : BiometricUtil.BiometricAuthListener {
                 override fun onBiometricAuthenticationSuccess(result: BiometricPrompt.AuthenticationResult) {

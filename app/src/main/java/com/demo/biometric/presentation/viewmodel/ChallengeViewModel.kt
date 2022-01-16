@@ -41,6 +41,16 @@ constructor(
         }
     }
 
+    fun getUUID(): String {
+        return localStorage.getUUID()
+    }
+
+    override fun onCleared() {
+        requestChallengeUseCase.onClear()
+        verifyChallengeUseCase.onClear()
+        super.onCleared()
+    }
+
     @Module
     abstract class VMModule {
         @Binds

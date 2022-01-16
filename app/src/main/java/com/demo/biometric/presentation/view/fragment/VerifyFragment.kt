@@ -1,5 +1,6 @@
 package com.demo.biometric.presentation.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,8 +28,12 @@ class VerifyFragment : BaseFragment<FragmentVerifyBinding>() {
 
     private val viewModel by viewModels<ChallengeViewModel> { viewModelFactory }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvTitle.text = "Public Key :\n${CryptoUtil.getPublicKey()}"
+        binding.tvUuid.text = "UUID :\n${viewModel.getUUID()}"
 
         binding.tvFingerPrint.setOnClickListener {
             baseActivity.setLoading(true)
@@ -75,6 +80,7 @@ class VerifyFragment : BaseFragment<FragmentVerifyBinding>() {
 
     fun showBiometricPrompt(challenge: Challenge) {
         BiometricUtil.showBiometricPrompt(
+            title = "바이오 인증 로그인",
             activity = baseActivity,
             listener = object : BiometricUtil.BiometricAuthListener {
                 override fun onBiometricAuthenticationSuccess(result: BiometricPrompt.AuthenticationResult) {
