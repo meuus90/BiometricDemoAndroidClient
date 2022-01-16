@@ -32,7 +32,7 @@ object CryptoUtil {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
                     setDigests(KeyProperties.DIGEST_SHA256)
                     setUserAuthenticationRequired(true)
-                    setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+                    setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1")) // ECDSA parameter (P-256) curve
                     setInvalidatedByBiometricEnrollment(true)
                     setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
                 }
